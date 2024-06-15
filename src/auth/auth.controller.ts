@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpCode, Post, UseGuards, Request } from '@nest
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { Public } from './constants';
+import { AuthenticationRequest } from './infrastructure/auth.infra';
 
 @Controller('/api/v1/auth')
 export class AuthController {
@@ -9,9 +10,9 @@ export class AuthController {
     
     @Public()
     @Post("login")
-    sigIn(@Body() signInDto: Record<string, any>) {
-        console.log("signInDto", signInDto)
-        return this.authService.signIn(signInDto.username, signInDto.password);
+    sigIn(@Body() request: AuthenticationRequest) {
+        console.log("request", request)
+        return this.authService.signIn(request.username, request.senha);
     }
 
     @UseGuards(AuthGuard)

@@ -2,6 +2,7 @@ import { BadRequestException, Logger } from "@nestjs/common";
 import { FilmeDTO } from "../dto/filme.dto";
 import { FilmeEntity } from "../filme.entity";
 import { FilmeRequest, FilmeUpdateRequest } from "../infrastructure/filme.infra";
+import { FilmeEnabled } from "../enums/filme.enum";
 
 export class FilmeUtils {
 
@@ -32,7 +33,7 @@ export class FilmeUtils {
         return new FilmeEntity({
             _idFilme: undefined,
             _nome: data._nome,
-            _enabled: '1',
+            _enabled: FilmeEnabled.TRUE,
             _descricao: data._descricao,
             //media
             _dataDeCriacao: new Date().toString(),

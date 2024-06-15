@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { hashSync } from 'bcrypt';
 import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { IsAdmin, UsuarioEnabled } from "./enums/usuario.enum";
 
 @Injectable()
 @Entity({ name: 'usuarios' })
@@ -15,10 +16,10 @@ export class UsuarioEntity {
     @Column({ nullable: false , name: 'senha'})
     _senha: string;
 
-    @Column({ nullable: false, default: "1", type: "bit", name: 'enabled'})
+    @Column({ nullable: false, default: UsuarioEnabled.TRUE, type: "bit", name: 'enabled'})
     _enabled: string;
 
-    @Column({ nullable: false, default: "0", type: "bit", name: 'is_admin'})
+    @Column({ nullable: false, default: IsAdmin.FALSE, type: "bit", name: 'is_admin'})
     _isAdmin: string;
 
     @CreateDateColumn({ name: 'data_de_criacao', nullable: false })

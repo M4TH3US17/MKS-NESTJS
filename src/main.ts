@@ -11,7 +11,6 @@ async function bootstrap() {
   .setTitle('API MKS TESTE')
   .setDescription('Documentação do teste da MKS')
   .setVersion('1.0.1')
-
   .build();
   
   const document = SwaggerModule.createDocument(app, config);

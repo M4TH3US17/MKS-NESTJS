@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { FilmeEnabled } from "./enums/filme.enum";
 
 @Injectable()
 @Entity({ name: 'filmes' })
@@ -14,7 +15,7 @@ export class FilmeEntity {
     @Column({ name: 'descricao', nullable: false, length: 255 })
     public _descricao: string;
 
-    @Column({ name: `enabled`, nullable: false, default: "1", type: "bit" })
+    @Column({ name: `enabled`, nullable: false, default: FilmeEnabled.TRUE, type: "bit" })
     public _enabled: string;
 
     // @ManyToOne(type => Media) // Uncomment and adjust if Media is another entity

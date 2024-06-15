@@ -2,6 +2,7 @@ import { BadRequestException, Logger } from "@nestjs/common";
 import { UsuarioDTO } from "../dto/usuario.dto";
 import { UsuarioEntity } from "../usuario.entity";
 import { UsuarioRequest, UsuarioUpdateRequest } from "../infrastructure/usuario.infra";
+import { IsAdmin, UsuarioEnabled } from "../enums/usuario.enum";
 
 
 export class UsuarioUtils {
@@ -54,8 +55,8 @@ export class UsuarioUtils {
             _idUsuario: null,
             _username: data._username,
             _senha: data._username,
-            _isAdmin: '0',
-            _enabled: '1',
+            _isAdmin: IsAdmin.FALSE,
+            _enabled: UsuarioEnabled.TRUE,
             _dataDeCriacao: new Date().toString()
         });
     };
