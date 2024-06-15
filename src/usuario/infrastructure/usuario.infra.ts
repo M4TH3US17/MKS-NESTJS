@@ -29,6 +29,21 @@ export class UsuarioRequest {
     @IsString({ message: "Campo senha é do tipo string!" })
     @ApiProperty({ description: 'Senha do usuario', example: 'usuario' })
     _senha: string;
+    
+    @IsNotEmpty({ message: "Campo de repeticao de senha é obrigatório!" })
+    @IsString({ message: "Campo repeticao de senha é do tipo string!" })
+    @ApiProperty({ description: 'Senha a ser repetida pelo usuario', example: 'usuario' })
+    _senhaRepetida: string;
+
+    @IsNotEmpty({ message: "Campo contato é obrigatório!" })
+    @IsString({ message: "Campo contato é do tipo string!" })
+    @ApiProperty({ description: 'Contato do usuario', example: '+55 (00) 00000-0000' })
+    _contact: string;
+
+    @IsOptional()
+    @IsString({ message: "Campo email é do tipo string!" })
+    @ApiProperty({ description: 'Email do usuario', example: 'usuario@gmail.com' })
+    _email: string;
   
     constructor(data: Partial<UsuarioRequest>) {
       Object.assign(this, data);
@@ -48,8 +63,18 @@ export class UsuarioUpdateRequest {
     _senha: string;
 
     @IsOptional()
+    @IsString({ message: "Campo contato é do tipo string!" })
+    @ApiProperty({ description: 'Contato do usuario', example: '+55 (00) 00000-0000' })
+    _contact: string;
+
+    @IsOptional()
+    @IsString({ message: "Campo email é do tipo string!" })
+    @ApiProperty({ description: 'Email do usuario', example: 'usuario@gmail.com' })
+    _email: string;
+
+    @IsOptional()
     @IsString({ message: "Campo enabled é do tipo string!" })
-    @ApiProperty({ description: 'Desativa ou ativa usuario no sistema. (1 = ativa, 2 = desativa)', example: '1' })
+    @ApiProperty({ description: 'Desativa ou ativa usuario no sistema. (1 = ativa, 0 = desativa)', example: '1' })
     _enabled: string;
     
     constructor(data: Partial<UsuarioRequest>) {

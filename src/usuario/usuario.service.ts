@@ -4,6 +4,7 @@ import { FindOneOptions, Repository } from "typeorm";
 import { UsuarioEntity } from "./usuario.entity";
 import { UsuarioRequest, UsuarioResponse, UsuarioUpdateRequest } from "./infrastructure/usuario.infra";
 import { UsuarioUtils } from "./utils/usuario.utils";
+import { UsuarioEnabled } from "./usuario.enums";
 
 @Injectable()
 export class UsuarioService {
@@ -19,7 +20,7 @@ export class UsuarioService {
         return new UsuarioResponse({
             code: HttpStatus.OK,
             message: "Segue as lista de usuarios encontrados!",
-            data: UsuarioUtils.parseListToDTO(data)
+            data: UsuarioUtils.parseListToDTO(data),
         });
     };
 
@@ -27,12 +28,13 @@ export class UsuarioService {
         this.log(`UsuarioService :: Buscando na base de dados o usuario de username ${username}...`);
         const usuario = await this.repository.findOne({ where: { _username: username } });
 
-        if (!usuario) throw new NotFoundException(`Usuário com username ${username} não encontrado`);
+        if (!usuario) 
+            throw new NotFoundException(`Usuário com username ${username} não encontrado`);
 
         this.log(`UsuarioService :: Usuario encontrado`);
 
         return usuario;
-      }
+    };
 
     public async findById(id: number): Promise<UsuarioResponse> {
         this.log(`UsuarioService :: Buscando usuario de ID ${id} ...`);
@@ -41,8 +43,8 @@ export class UsuarioService {
 
         return new UsuarioResponse({
             code: HttpStatus.OK,
-            message: "Segue as lista de usuarios encontrados!",
-            data: UsuarioUtils.parseToDTO(data)
+            message: `Usuario de id ${id} encontrado!`,
+            data: UsuarioUtils.parseToDTO(data),
         });
     };
 
@@ -56,8 +58,8 @@ export class UsuarioService {
         this.log(`UsuarioService : Retornando usuario para o client-side ...`);
         return new UsuarioResponse({
             code: HttpStatus.OK,
-            message: "Usuario Salvo com sucesso!",
-            data: UsuarioUtils.parseToDTO(usuarioSalvo)
+            message: "Usuario salvo com sucesso!",
+            data: UsuarioUtils.parseToDTO(usuarioSalvo),
         });
     };
 
@@ -68,9 +70,8 @@ export class UsuarioService {
         const options: FindOneOptions = {where: { id: id }};
         const usuarioDoBanco = await this.repository.findOne(options);
 
-        if(usuarioDoBanco === undefined || usuarioDoBanco === null) {
+        if(!usuarioDoBanco) 
             throw new BadRequestException(`Usuario de ID ${id} nao encontrado na base de dados!`);
-        };
 
         this.log(`UsuarioService :: Usuario encontrado na base de dados!!`);
         this.log(`UsuarioService :: Atualizando no banco de dados ...`);
@@ -79,7 +80,7 @@ export class UsuarioService {
         return new UsuarioResponse({
             code: HttpStatus.OK,
             message: "Segue as lista de usuarios encontrados!",
-            data: UsuarioUtils.parseToDTO(usuarioAtualizado)
+            data: UsuarioUtils.parseToDTO(usuarioAtualizado),
         });
     };
 
@@ -89,11 +90,10 @@ export class UsuarioService {
         const options: FindOneOptions = {where: { id: id }};
         const usuarioDoBanco = await this.repository.findOne(options);
 
-        if(usuarioDoBanco === undefined || usuarioDoBanco === null) {
-            throw new BadRequestException(`Usuario de ID ${id} nao encontrado na base de dados!`);
-        };
+        if(!usuarioDoBanco)
+            throw new NotFoundException(`Usuario de ID ${id} nao encontrado na base de dados!`);
 
-        usuarioDoBanco.setEnabled = '0';
+        usuarioDoBanco.setEnabled = UsuarioEnabled.FALSE;
         
         return  new UsuarioResponse({
             code: HttpStatus.OK,

@@ -1,17 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { UsuariosModule } from './usuario/usuario.module';
-import { FilmeModule } from './filme/filme.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { UsuarioEntity } from './usuario/usuario.entity';
-import { FilmeEntity } from './filme/filme.entity';
 import { AuthModule } from './auth/auth.module';
+import { MediaModule } from './media/media.module';
 
 @Module({
   imports: [
     UsuariosModule,
-    FilmeModule,
+    MediaModule,
     AuthModule,
     TypeOrmModule.forRoot({
       type: process.env.TYPEORM_CONNECTION || `postgres`,
@@ -20,7 +19,7 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.TYPEORM_USERNAME || 'postgres',
       password: process.env.TYPEORM_PASSWORD || `admin`,
       database: process.env.TYPEORM_DATABASE || 'teste-mks',
-      entities: [UsuarioEntity, FilmeEntity],
+      entities: [UsuarioEntity],
       synchronize: true,
     } as TypeOrmModuleOptions),
   ],
