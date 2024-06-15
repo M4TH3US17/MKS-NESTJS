@@ -1,14 +1,18 @@
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { UsuarioService } from "./usuario.service";
 import { UsuarioRequest, UsuarioResponse, UsuarioUpdateRequest } from "./infrastructure/usuario.infra";
+import { AuthGuard } from "@nestjs/passport";
+import { Public } from "src/auth/constants";
 
 @ApiTags('usuarios')
 @Controller('api/v1/usuarios')
+//@UseGuards(AuthGuard('jwt'))
 export class UsuarioController {
     constructor(private readonly service: UsuarioService) { }
 
     @Get()
+    @Public()
     @ApiOperation({ summary: 'Retorna todos os usuarios cadastrados no sistema' })
     @ApiResponse({ status: HttpStatus.OK, type: UsuarioResponse })
     public async findAll(): Promise<UsuarioResponse> {
@@ -17,7 +21,14 @@ export class UsuarioController {
         return response;
     };
 
+   /* @Get(':username')
+    async findByUsername(@Param('username') username: string) {
+        this.log(`UsuarioController :: Iniciando processo de busca de usuario de username ${username} ...`);
+        return await this.service.findUsuarioEntityByUsername(username)
+    }*/
+
     @Get(':id')
+    @Public()
     @ApiOperation({ summary: 'Retorna um usuario por ID.' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Usuario nao encontrado' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Usuario localizado com sucesso', type: UsuarioResponse })
@@ -29,6 +40,7 @@ export class UsuarioController {
     };
 
     @Post()
+    @Public()
     @ApiOperation({ summary: 'Cadastra um usuario no sistema.' })
     @ApiBody({ type: UsuarioRequest, description: 'Objeto para cadastrar um usuario. Exemplo: [inserir exemplo de json aqui]' })
     @ApiResponse({ status: HttpStatus.CREATED, description: 'Usuario cadastrado com sucesso', type: UsuarioResponse })

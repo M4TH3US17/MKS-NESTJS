@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, HttpStatus, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOneOptions, Repository } from "typeorm";
 import { UsuarioEntity } from "./usuario.entity";
@@ -23,6 +23,17 @@ export class UsuarioService {
         });
     };
 
+    public async findUsuarioEntityByUsername(username: string): Promise<UsuarioEntity> {
+        this.log(`UsuarioService :: Buscando na base de dados o usuario de username ${username}...`);
+        const usuario = await this.repository.findOne({ where: { _username: username } });
+
+        if (!usuario) throw new NotFoundException(`Usuário com username ${username} não encontrado`);
+
+        this.log(`UsuarioService :: Usuario encontrado`);
+
+        return usuario;
+      }
+
     public async findById(id: number): Promise<UsuarioResponse> {
         this.log(`UsuarioService :: Buscando usuario de ID ${id} ...`);
         const options: FindOneOptions = { where: { id } };
@@ -37,13 +48,16 @@ export class UsuarioService {
 
     public async save(request: UsuarioRequest): Promise<UsuarioResponse> {
         this.log(`UsuarioService :: Iniciando processo de persistencia no banco de dados ...`);
-
         const usuario = UsuarioUtils.parseRequestToEntityForSave(request);
 
+        this.log(`UsuarioService : Salvando usuario no banco de dados ...`);
+        const usuarioSalvo = await this.repository.save(usuario);
+
+        this.log(`UsuarioService : Retornando usuario para o client-side ...`);
         return new UsuarioResponse({
             code: HttpStatus.OK,
-            message: "Segue as lista de usuarios encontrados!",
-            data: UsuarioUtils.parseToDTO(usuario)
+            message: "Usuario Salvo com sucesso!",
+            data: UsuarioUtils.parseToDTO(usuarioSalvo)
         });
     };
 

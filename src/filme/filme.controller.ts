@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Patch, Post }
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { FilmeRequest, FilmeResponse, FilmeUpdateRequest } from "./infrastructure/filme.infra";
 import { FilmeService } from "./filme.service";
+import { Public } from "src/auth/constants";
 
 @ApiTags('filmes')
 @Controller('api/v1/filmes')
@@ -10,6 +11,7 @@ export class FilmeController {
     constructor(private readonly service: FilmeService) { }
 
     @Get()
+    @Public()
     @ApiOperation({ summary: 'Retorna todos os filmes cadastrados no sistema' })
     @ApiResponse({ status: HttpStatus.OK, type: FilmeResponse })
     public async findAll(): Promise<FilmeResponse> {
@@ -19,6 +21,7 @@ export class FilmeController {
     };
 
     @Get(':id')
+    @Public()
     @ApiOperation({ summary: 'Retorna um filme por ID.' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Filme nao encontrado' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Filme localizado com sucesso', type: FilmeResponse })

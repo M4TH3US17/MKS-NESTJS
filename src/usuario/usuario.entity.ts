@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { hashSync } from 'bcrypt';
+import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Injectable()
 @Entity({ name: 'usuarios' })
@@ -25,6 +26,11 @@ export class UsuarioEntity {
 
     constructor(data: Partial<UsuarioEntity>) {
         Object.assign(this, data);
+    };
+
+    @BeforeInsert()
+    public hashSenha() {
+        this._senha = hashSync(this._senha, 10); 
     };
 
     // Setters
